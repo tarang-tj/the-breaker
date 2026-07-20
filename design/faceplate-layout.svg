@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="300mm" height="210mm" viewBox="0 0 300 210">
+  <!-- ================================================================
+       THE BREAKER - faceplate layout - rev A - 2026-07-18
+       3mm acrylic on ABS box, nominal face 150 x 110 mm. Drawn 1:1 (1 user unit = 1 mm).
+       Datum = plate top-left corner. Plate top-left placed at (45,45) in sheet coords.
+       LAYER CONVENTION for laser software:
+         CUT (through)   -> stroke #FF0000, 0.1mm   (group id="cut")
+         ENGRAVE (surf.) -> #0000FF                 (group id="engrave")
+         ANNOTATION      -> neutral gray, DO NOT CUT (group id="annotation")
+       ================================================================ -->
+  <defs>
+    <marker id="arw" markerWidth="5" markerHeight="5" refX="4.2" refY="2.5" orient="auto-start-reverse">
+      <path d="M0,0 L5,2.5 L0,5 z" fill="#667085"/>
+    </marker>
+  </defs>
+
+  <!-- sheet background: WHITE fabrication drawing area (not a dark slide) -->
+  <rect x="0" y="0" width="300" height="210" fill="#FFFFFF"/>
+
+  <!-- ==================== SLIM DARK TITLE BLOCK STRIP ==================== -->
+  <g id="title-block">
+    <rect x="0" y="0" width="300" height="14" fill="#0B1220"/>
+    <text x="6" y="9.4" font-family="Menlo,monospace" font-size="5.2" fill="#E6EDF7">THE BREAKER - faceplate layout - rev A - 2026-07-18 - 3mm acrylic - 150x110mm</text>
+  </g>
+
+  <!-- ==================================================================
+       (a) FRONT VIEW  (1:1)  cuts=red engrave=blue annotations=gray
+       ================================================================== -->
+
+  <!-- CUT LAYER (through, red #FF0000, 0.1mm) -->
+  <g id="cut" fill="none" stroke="#FF0000" stroke-width="0.1">
+    <!-- plate outline (through-cut perimeter, 150 x 110) -->
+    <rect id="plate-outline" x="45" y="45" width="150" height="110"/>
+    <!-- guarded missile toggle - panel hole 12.2mm* (top center hero) center(120,73) -->
+    <circle id="toggle-hole" cx="120" cy="73" r="6.1"/>
+    <!-- 3 panel meter cutouts 38x38mm* centers x=73/120/167 y=111 -->
+    <rect id="meter-cut-1" x="54"  y="92" width="38" height="38"/>
+    <rect id="meter-cut-2" x="101" y="92" width="38" height="38"/>
+    <rect id="meter-cut-3" x="148" y="92" width="38" height="38"/>
+    <!-- LED holes 5.2mm* : red STATUS (65,143), RGB (175,143) -->
+    <circle id="led-status" cx="65"  cy="143" r="2.6"/>
+    <circle id="led-rgb"    cx="175" cy="143" r="2.6"/>
+    <!-- M3 corner mounting holes 3.2mm, 6mm inset -->
+    <circle id="m3-tl" cx="51"  cy="51"  r="1.6"/>
+    <circle id="m3-tr" cx="189" cy="51"  r="1.6"/>
+    <circle id="m3-bl" cx="51"  cy="149" r="1.6"/>
+    <circle id="m3-br" cx="189" cy="149" r="1.6"/>
+    <!-- buzzer sound slots 6x 2x15mm (behind panel) centers x=110..130 -->
+    <rect id="buz-1" x="109" y="135" width="2" height="14"/>
+    <rect id="buz-2" x="113" y="135" width="2" height="14"/>
+    <rect id="buz-3" x="117" y="135" width="2" height="14"/>
+    <rect id="buz-4" x="121" y="135" width="2" height="14"/>
+    <rect id="buz-5" x="125" y="135" width="2" height="14"/>
+    <rect id="buz-6" x="129" y="135" width="2" height="14"/>
+  </g>
+
+  <!-- ENGRAVE LAYER (surface, blue #0000FF) -->
+  <g id="engrave">
+    <!-- thin engraved border frame, 5mm inset -->
+    <rect x="50" y="50" width="140" height="100" fill="none" stroke="#0000FF" stroke-width="0.25"/>
+    <!-- guarded-switch footprint (engraved reference of guard cage) -->
+    <rect x="107" y="66" width="26" height="16" rx="3" fill="none" stroke="#0000FF" stroke-width="0.25" stroke-dasharray="1.6 1.2"/>
+    <!-- meter bezel outlines 45x45mm* (engraved index of bezel footprint) -->
+    <rect x="50.5"  y="88.5" width="45" height="45" fill="none" stroke="#0000FF" stroke-width="0.25"/>
+    <rect x="97.5"  y="88.5" width="45" height="45" fill="none" stroke="#0000FF" stroke-width="0.25"/>
+    <rect x="144.5" y="88.5" width="45" height="45" fill="none" stroke="#0000FF" stroke-width="0.25"/>
+    <!-- engraved caps text -->
+    <g fill="#0000FF" font-family="Menlo,monospace" text-anchor="middle">
+      <text x="120" y="59" font-size="7" letter-spacing="1.2">THE BREAKER</text>
+      <text x="120" y="64" font-size="3.1" letter-spacing="1.4">AGENT FLEET AUTHORITY</text>
+      <text x="73"  y="87" font-size="3" letter-spacing="0.4">TASKS</text>
+      <text x="120" y="87" font-size="3" letter-spacing="0.6">REVIEWS</text>
+      <text x="167" y="87" font-size="3" letter-spacing="0.5">HALTS</text>
+      <text x="65"  y="139" font-size="2.6" letter-spacing="0.4">STATUS</text>
+      <text x="175" y="139" font-size="2.6" letter-spacing="0.6">RGB</text>
+    </g>
+  </g>
+
+  <!-- ANNOTATION LAYER (gray) DO NOT CUT -->
+  <g id="annotation" font-family="Menlo,monospace">
+    <!-- witness/extension + dimension lines, arrows both ends -->
+    <g stroke="#667085" stroke-width="0.15" fill="none">
+      <!-- TOP horizontal ordinate ladder (datum = plate left, x=45) at y=38 -->
+      <line x1="45" y1="45" x2="45" y2="34"/>
+      <line x1="45" y1="38" x2="195" y2="38" marker-start="url(#arw)" marker-end="url(#arw)"/>
+      <line x1="65"  y1="45" x2="65"  y2="36"/>
+      <line x1="73"  y1="92" x2="73"  y2="36"/>
+      <line x1="120" y1="73" x2="120" y2="36"/>
+      <line x1="167" y1="92" x2="167" y2="36"/>
+      <line x1="175" y1="45" x2="175" y2="36"/>
+      <line x1="195" y1="45" x2="195" y2="34"/>
+      <!-- LEFT vertical ordinate ladder (datum = plate top, y=45) at x=38 -->
+      <line x1="45" y1="45" x2="34" y2="45"/>
+      <line x1="38" y1="45" x2="38" y2="155" marker-start="url(#arw)" marker-end="url(#arw)"/>
+      <line x1="120" y1="73"  x2="36" y2="73"/>
+      <line x1="45"  y1="111" x2="36" y2="111"/>
+      <line x1="65"  y1="143" x2="36" y2="143"/>
+      <line x1="45"  y1="155" x2="34" y2="155"/>
+      <!-- OVERALL WIDTH 150 (box face nominal) at y=170 -->
+      <line x1="45" y1="155" x2="45" y2="172"/>
+      <line x1="195" y1="155" x2="195" y2="172"/>
+      <line x1="45" y1="170" x2="195" y2="170" marker-start="url(#arw)" marker-end="url(#arw)"/>
+      <!-- METER-CENTER SPACING chain at y=163 -->
+      <line x1="45" y1="163" x2="195" y2="163"/>
+      <line x1="73"  y1="130" x2="73"  y2="165"/>
+      <line x1="120" y1="130" x2="120" y2="165"/>
+      <line x1="167" y1="130" x2="167" y2="165"/>
+      <line x1="45"  y1="161" x2="45"  y2="165"/>
+      <line x1="195" y1="161" x2="195" y2="165"/>
+      <!-- corner-inset detail (top-left) -->
+      <line x1="45" y1="51" x2="51" y2="51"/>
+      <line x1="51" y1="45" x2="51" y2="51"/>
+    </g>
+    <!-- dimension text (gray) -->
+    <g fill="#555B66" text-anchor="middle">
+      <!-- top ordinate labels (staggered where close) -->
+      <text x="65"  y="31" font-size="2.4">20</text>
+      <text x="76"  y="34.6" font-size="2.4">28</text>
+      <text x="120" y="31" font-size="2.4">75</text>
+      <text x="167" y="34.6" font-size="2.4">122</text>
+      <text x="178" y="31" font-size="2.4">130</text>
+      <text x="195" y="31" font-size="2.4" text-anchor="end">150</text>
+      <!-- left ordinate labels -->
+      <text x="33" y="73.8"  font-size="2.4" text-anchor="end">28</text>
+      <text x="33" y="111.8" font-size="2.4" text-anchor="end">66</text>
+      <text x="33" y="143.8" font-size="2.4" text-anchor="end">98</text>
+      <text x="33" y="155.8" font-size="2.4" text-anchor="end">110</text>
+      <!-- overall width -->
+      <text x="120" y="169" font-size="2.8">150  (box face, nominal)</text>
+      <!-- meter spacing chain labels -->
+      <text x="59"  y="167" font-size="2.4">28</text>
+      <text x="96.5" y="167" font-size="2.4">47</text>
+      <text x="143.5" y="167" font-size="2.4">47</text>
+      <text x="181" y="167" font-size="2.4">28</text>
+      <!-- datum callouts -->
+      <text x="42" y="43" font-size="2.2" text-anchor="start" fill="#8A93A3">DATUM 0,0</text>
+    </g>
+    <!-- corner inset labels -->
+    <text x="47.5" y="49" font-size="2.1" fill="#555B66" text-anchor="middle">6</text>
+    <text x="53.5" y="58" font-size="2.1" fill="#555B66" text-anchor="middle">6</text>
+    <!-- ladder axis captions -->
+    <text x="120" y="30" font-size="2.2" fill="#8A93A3" text-anchor="middle">X FROM DATUM (mm) - switch/meter/LED centers - DO NOT CUT</text>
+    <text x="26" y="100" font-size="2.2" fill="#8A93A3" text-anchor="middle" transform="rotate(-90 26 100)">Y FROM DATUM (mm) - DO NOT CUT</text>
+  </g>
+
+  <!-- ==================================================================
+       (b) CUT LEGEND + CUTOUT SCHEDULE + NOTE BLOCK
+       ================================================================== -->
+  <g id="legend" font-family="Menlo,monospace">
+    <rect x="212" y="30" width="84" height="172" fill="#F5F7FA" stroke="#C7CED9" stroke-width="0.3"/>
+    <text x="216" y="38" font-size="3.4" fill="#111827" font-weight="bold">CUT LEGEND</text>
+
+    <!-- line-type key -->
+    <line x1="216" y1="44" x2="230" y2="44" stroke="#FF0000" stroke-width="0.6"/>
+    <text x="233" y="45" font-size="2.7" fill="#333">CUT (through)  #FF0000  0.1mm</text>
+    <line x1="216" y1="50" x2="230" y2="50" stroke="#0000FF" stroke-width="0.6"/>
+    <text x="233" y="51" font-size="2.7" fill="#333">ENGRAVE (surface)  #0000FF</text>
+    <line x1="216" y1="56" x2="230" y2="56" stroke="#667085" stroke-width="0.5" stroke-dasharray="1.5 1"/>
+    <text x="233" y="57" font-size="2.7" fill="#333">ANNOTATION  gray  DO NOT CUT</text>
+
+    <text x="216" y="66" font-size="3.2" fill="#111827" font-weight="bold">CUTOUT SCHEDULE</text>
+    <text x="216" y="66.9" font-size="2.4" fill="#8A93A3">(datum = plate top-left; all mm)</text>
+    <g font-size="2.7" fill="#333">
+      <text x="216" y="73">TOGGLE PANEL HOLE      &#216;12.2*</text>
+      <text x="216" y="79">PANEL METER CUTOUT     38x38*</text>
+      <text x="216" y="84">  METER BEZEL          45x45*</text>
+      <text x="216" y="88.6" font-size="2.3" fill="#B4451F">  ^ riskiest dim - DROK meters vary</text>
+      <text x="216" y="94">STATUS LED HOLE        &#216;5.2*</text>
+      <text x="216" y="99">RGB LED HOLE           &#216;5.2*</text>
+      <text x="216" y="104">M3 CORNER HOLES        &#216;3.2  (inset 6)</text>
+      <text x="216" y="109">BUZZER SLOTS           6x  2x15</text>
+    </g>
+
+    <!-- METER CENTER statement (machine-checkable numbers) -->
+    <text x="216" y="118" font-size="2.7" fill="#111827" font-weight="bold">METER CENTERS FROM DATUM</text>
+    <text id="meter-centers-note" x="216" y="123" font-size="2.7" fill="#333">X = 28 / 75 / 122 mm   (SPACING 47)</text>
+    <text id="switch-center-note" x="216" y="128" font-size="2.7" fill="#333">SWITCH CENTER  X=75  Y=28</text>
+    <text x="216" y="133" font-size="2.7" fill="#333">LED CENTERS  X=20 &amp; 130  Y=98</text>
+
+    <!-- NOTE BLOCK -->
+    <rect x="214" y="140" width="80" height="20" fill="#FFF7E6" stroke="#E0A93B" stroke-width="0.4"/>
+    <text x="217" y="146" font-size="3" fill="#7A5200" font-weight="bold">NOTE - part-dependent dims (*)</text>
+    <text id="note-block" x="217" y="151.5" font-size="2.8" fill="#7A5200">* verify against purchased part</text>
+    <text x="217" y="156" font-size="2.8" fill="#7A5200">  datasheet before cutting</text>
+
+    <g font-size="2.4" fill="#555">
+      <text x="216" y="167">Material: 3mm cast acrylic faceplate.</text>
+      <text x="216" y="172">Mount: ABS project box, M3 x4 corners.</text>
+      <text x="216" y="177">Text engraved in caps; frame engraved.</text>
+      <text x="216" y="182">Engrave text shown filled blue for</text>
+      <text x="216" y="186">legibility (= engrave layer).</text>
+      <text x="216" y="193" fill="#8A93A3">All dims in mm. Front view drawn 1:1.</text>
+      <text x="216" y="197.5" fill="#8A93A3">Annotation/dimension layer = DO NOT CUT.</text>
+    </g>
+  </g>
+</svg>

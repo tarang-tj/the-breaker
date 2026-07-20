@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Breaker — a hardware kill-switch for an AI agent fleet</title>
+<meta name="description" content="A physical dead-man kill-switch for an autonomous AI agent fleet. Guarded switch, Raspberry Pi authority tokens, fail-safe to HALT.">
+<meta property="og:title" content="The Breaker">
+<meta property="og:description" content="A physical dead-man kill-switch for an autonomous AI agent fleet. The default state is stop.">
+<style>
+  :root{
+    --bg:#0B1220; --surface:#111A2E; --surface2:#0E1526; --border:#2A3A5C;
+    --text:#E6EDF7; --amber:#FFB000; --green:#27C93F; --muted:#8CA0BF; --red:#E5484D;
+    --maxw:1080px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .mono{font-family:"SF Mono",Menlo,Consolas,monospace;}
+  a{color:var(--amber);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  .rule{height:5px;background:var(--amber);width:100%;}
+
+  /* top bar */
+  header.bar{position:sticky;top:0;z-index:10;background:rgba(11,18,32,0.85);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--border);}
+  .bar-in{display:flex;align-items:center;justify-content:space-between;
+    padding:14px 24px;max-width:var(--maxw);margin:0 auto;}
+  .brand{font-family:Menlo,monospace;letter-spacing:4px;font-weight:700;font-size:15px;}
+  .bar a.ghlink{font-size:14px;color:var(--muted);}
+  .bar a.ghlink:hover{color:var(--text);text-decoration:none;}
+
+  /* hero */
+  .hero{padding:92px 0 72px;position:relative;overflow:hidden;}
+  .hero-bg{position:absolute;inset:0;opacity:0.10;object-fit:cover;width:100%;height:100%;}
+  .hero .wrap{position:relative;z-index:1;}
+  .badge{display:inline-block;font-family:Menlo,monospace;font-size:12px;letter-spacing:1px;
+    color:var(--amber);border:1px solid var(--amber);border-radius:999px;
+    padding:5px 12px;margin-bottom:26px;}
+  h1{font-size:clamp(42px,7vw,78px);line-height:1.03;letter-spacing:-1.5px;font-weight:800;}
+  .sub{font-size:clamp(19px,2.6vw,26px);color:var(--amber);font-weight:600;margin-top:18px;}
+  .lede{font-size:18px;color:var(--muted);max-width:640px;margin-top:26px;}
+  .cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px;}
+  .btn{display:inline-block;padding:13px 22px;border-radius:8px;font-weight:600;font-size:15px;
+    border:1px solid var(--border);color:var(--text);transition:all .15s;}
+  .btn:hover{text-decoration:none;border-color:var(--amber);transform:translateY(-1px);}
+  .btn.primary{background:var(--amber);color:#0B1220;border-color:var(--amber);}
+  .btn.primary:hover{filter:brightness(1.08);}
+
+  /* sections */
+  section.block{padding:64px 0;border-top:1px solid var(--border);}
+  .kicker{font-family:Menlo,monospace;font-size:13px;letter-spacing:2px;color:var(--amber);
+    text-transform:uppercase;margin-bottom:14px;}
+  h2{font-size:clamp(28px,4vw,40px);letter-spacing:-0.5px;font-weight:700;line-height:1.12;}
+  .block p.body{font-size:17px;color:#C7D2E6;max-width:680px;margin-top:18px;}
+  .figure{margin-top:34px;background:var(--surface2);border:1px solid var(--border);
+    border-radius:12px;padding:20px;}
+  .figure img{width:100%;height:auto;display:block;border-radius:6px;}
+  .cap{font-size:14px;color:var(--muted);margin-top:12px;text-align:center;}
+
+  /* truth table */
+  .twrap{margin-top:30px;overflow-x:auto;}
+  table{border-collapse:separate;border-spacing:0 10px;width:100%;min-width:440px;}
+  td{background:var(--surface);border:1px solid var(--border);padding:16px 20px;font-size:16px;}
+  td:first-child{border-right:none;border-radius:8px 0 0 8px;}
+  td.verd{border-left:none;border-radius:0 8px 8px 0;text-align:right;
+    font-family:Menlo,monospace;font-weight:700;letter-spacing:1px;width:34%;}
+  td.halt{color:var(--amber);} td.act{color:var(--green);}
+
+  /* bom table */
+  table.bom{border-spacing:0;min-width:420px;}
+  table.bom td{border:none;border-bottom:1px solid var(--border);background:transparent;
+    padding:13px 8px;border-radius:0;}
+  table.bom td.price{text-align:right;font-family:Menlo,monospace;color:#C7D2E6;}
+  table.bom tr.total td{border-top:2px solid var(--amber);border-bottom:none;
+    color:var(--amber);font-weight:700;padding-top:18px;}
+
+  /* slide gallery */
+  .gallery{margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .gallery a{display:block;border:1px solid var(--border);border-radius:10px;overflow:hidden;
+    transition:transform .15s,border-color .15s;}
+  .gallery a:hover{transform:translateY(-3px);border-color:var(--amber);}
+  .gallery img{width:100%;height:auto;display:block;}
+  @media(max-width:720px){.gallery{grid-template-columns:repeat(2,1fr);}}
+
+  /* footer */
+  footer{padding:64px 0 80px;border-top:1px solid var(--border);text-align:center;}
+  footer .flinks{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin-top:22px;font-size:16px;}
+  footer .note{font-size:13px;color:var(--muted);max-width:560px;margin:34px auto 0;}
+  .default-line{font-size:clamp(24px,4vw,38px);font-weight:800;letter-spacing:-0.5px;}
+  .default-line .amber{color:var(--amber);}
+</style>
+</head>
+<body>
+<div class="rule"></div>
+<header class="bar">
+  <div class="bar-in">
+    <span class="brand">THE BREAKER</span>
+    <a class="ghlink" href="https://github.com/tarang-tj/the-breaker">github.com/tarang-tj/the-breaker ↗</a>
+  </div>
+</header>
+
+<section class="hero">
+  <img class="hero-bg" src="design/system-architecture.svg" alt="">
+  <div class="wrap">
+    <span class="badge">DESIGN COMPLETE · BUILD IN PROGRESS</span>
+    <h1>A hardware kill-switch<br>for my AI agents.</h1>
+    <div class="sub">The default state is stop.</div>
+    <p class="lede">I run a small fleet of AI agents that handle research, monitoring, and busywork while I sleep. Software has an off switch only as long as the software cooperates. So I gave them one that doesn't.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/tarang-tj/the-breaker">View on GitHub</a>
+      <a class="btn" href="https://www.linkedin.com/in/tarang-tj">Follow the build</a>
+      <a class="btn" href="design/the-breaker-design-reveal.pdf">Design deck (PDF)</a>
+    </div>
+  </div>
+</section>
+
+<section class="block"><div class="wrap">
+  <div class="kicker">The problem</div>
+  <h2>Yelling at the screen does nothing.</h2>
+  <p class="body">The agents run unattended. If one misbehaves, there is no physical way to make it stop — the "off switch" only works while the software chooses to listen. I wanted a control I could reason about physically: something I can see, flip, and trust.</p>
+</div></section>
+
+<section class="block"><div class="wrap">
+  <div class="kicker">How it works</div>
+  <h2>Switch → Pi → token → agents.</h2>
+  <p class="body">A guarded toggle feeds a Raspberry Pi Zero 2 W on my private Tailscale network. The Pi serves a short-TTL authority token over HTTP. Every agent must hold a fresh token before every action. The agents are never told to stop — they lose the ability to prove they may continue.</p>
+  <div class="figure">
+    <img src="design/system-architecture.svg" alt="System architecture: guarded switch to Raspberry Pi to short-TTL token to Mac agent fleet, safe state HALT">
+    <div class="cap">One guarded switch feeds a Pi that issues 3-second tokens over a private network.</div>
+  </div>
+</div></section>
+
+<section class="block"><div class="wrap">
+  <div class="kicker">Fail-safe logic</div>
+  <h2>Every failure lands on HALT.</h2>
+  <p class="body">The safe state is reached by loss, not by a command. Anything that breaks the chain — the switch, the Pi, the network, the clock — fails safe.</p>
+  <div class="twrap"><table>
+    <tr><td>Switch OPEN</td><td class="verd halt">HALT</td></tr>
+    <tr><td>Pi process dead (no token to fetch)</td><td class="verd halt">HALT</td></tr>
+    <tr><td>Network partition (fetch fails)</td><td class="verd halt">HALT</td></tr>
+    <tr><td>Token expired / clock skew</td><td class="verd halt">HALT</td></tr>
+    <tr><td>Switch CLOSED + fresh token</td><td class="verd act">ACT</td></tr>
+  </table></div>
+</div></section>
+
+<section class="block"><div class="wrap">
+  <div class="kicker">Wiring</div>
+  <h2>Two wires make the safety.</h2>
+  <p class="body"><span class="mono" style="color:var(--amber)">GPIO26</span> to ground, with the Pi's internal pull-up in software. An open or broken circuit reads HIGH = HALT. 5V never touches a GPIO pin.</p>
+  <div class="figure">
+    <img src="design/wiring-diagram.svg" alt="Wiring diagram for the halt switch, status LED, and relay">
+    <div class="cap">Solderless bench wiring. Full pin map in <a href="hardware/gpio-map.md">hardware/gpio-map.md</a>.</div>
+  </div>
+</div></section>
+
+<section class="block"><div class="wrap">
+  <div class="kicker">Faceplate</div>
+  <h2>150×110mm laser-cut acrylic.</h2>
+  <p class="body">Cut at the UW Bothell makerspace. Phase 2 adds three analog gauges for live agent-activity metrics (tasks, reviews, halts), an RGB status LED, and an event chime.</p>
+  <div class="figure">
+    <img src="design/faceplate-layout.svg" alt="Faceplate layout with guarded toggle, status LED, and three gauge cutouts">
+  </div>
+</div></section>
+
+<section class="block"><div class="wrap">
+  <div class="kicker">Bill of materials</div>
+  <h2>$41.59 to make it real.</h2>
+  <p class="body">Phase 1 gets a working bench demo. Both phases land around $106–125, under a $200 cap. The full itemized list, hand-audited, is in <a href="hardware/bom.md">hardware/bom.md</a>.</p>
+  <div class="twrap"><table class="bom">
+    <tr><td>Raspberry Pi Zero 2 W (pre-soldered headers)</td><td class="price">$15.00</td></tr>
+    <tr><td>Guarded missile toggle switch</td><td class="price">$8.00</td></tr>
+    <tr><td>SanDisk Ultra 32GB microSD</td><td class="price">$7.99</td></tr>
+    <tr><td>400-point solderless breadboard</td><td class="price">$3.00</td></tr>
+    <tr><td>Female-female Dupont jumpers (40-pack)</td><td class="price">$5.00</td></tr>
+    <tr><td>5mm red LED + 470Ω resistor</td><td class="price">$0.60</td></tr>
+    <tr><td>Pre-crimped female spade connectors (×4)</td><td class="price">$2.00</td></tr>
+    <tr class="total"><td>Phase 1 core</td><td class="price">$41.59</td></tr>
+  </table></div>
+</div></section>
+
+<section class="block"><div class="wrap">
+  <div class="kicker">Design deck</div>
+  <h2>The full nine-slide reveal.</h2>
+  <div class="gallery">
+    <a href="slides/slide-01.png"><img src="slides/slide-01.png" alt="Slide 1" loading="lazy"></a>
+    <a href="slides/slide-02.png"><img src="slides/slide-02.png" alt="Slide 2" loading="lazy"></a>
+    <a href="slides/slide-03.png"><img src="slides/slide-03.png" alt="Slide 3" loading="lazy"></a>
+    <a href="slides/slide-04.png"><img src="slides/slide-04.png" alt="Slide 4" loading="lazy"></a>
+    <a href="slides/slide-05.png"><img src="slides/slide-05.png" alt="Slide 5" loading="lazy"></a>
+    <a href="slides/slide-06.png"><img src="slides/slide-06.png" alt="Slide 6" loading="lazy"></a>
+    <a href="slides/slide-07.png"><img src="slides/slide-07.png" alt="Slide 7" loading="lazy"></a>
+    <a href="slides/slide-08.png"><img src="slides/slide-08.png" alt="Slide 8" loading="lazy"></a>
+    <a href="slides/slide-09.png"><img src="slides/slide-09.png" alt="Slide 9" loading="lazy"></a>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="default-line">Would you let an agent act for you<br>without a <span class="amber">hardware off switch?</span></div>
+  <div class="flinks">
+    <a href="https://github.com/tarang-tj/the-breaker">GitHub repo</a>
+    <a href="https://www.linkedin.com/in/tarang-tj">LinkedIn</a>
+    <a href="https://github.com/tarang-tj">More projects</a>
+  </div>
+  <p class="note">Design of record complete and audited; parts not yet ordered. The authority-token service, agent-side gate, and build video are next. Diagrams and renders are my own.</p>
+</div></footer>
+</body>
+</html>
