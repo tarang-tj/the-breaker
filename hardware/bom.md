@@ -55,6 +55,20 @@ for continuous write (it is the surveillance-camera card). NVMe via the M.2 HAT+
 **Nothing for a display.** No micro-HDMI cable, keyboard or monitor: flash with Raspberry Pi
 Imager, preset WiFi + SSH + hostname, and the board is headless from first boot.
 
+**A card reader IS needed.** The build machine is a MacBook Air, which has no SD slot. The card
+ships with a full-size SD adapter, which is useless without one. Without a reader the card cannot
+be flashed and the Pi never boots — a $7 part gating the entire build.
+
+**The PSU is not optional here.** An earlier revision said to borrow the laptop's USB-C charger.
+That is wrong for this build specifically: the whole point of this Pi is that it keeps running
+when the laptop is closed and in a bag, so it cannot share the laptop's power supply.
+
+**No soldering iron.** The enclosure's standoffs take self-tapping M2.5 screws directly into
+printed PLA rather than heat-set inserts. Inserts thread better and survive far more
+reassemblies, but they need a soldering iron. Self-tapped PLA threads start to strip after
+roughly 5–10 reassemblies; the Pi is mounted once, so that ceiling is never approached. If this
+ever becomes a frequently-reworked assembly, switch back to inserts and buy the iron then.
+
 ## Phase 2: cockpit expansion
 
 Order only once Phase 1 works. **The meter row is not settled** — see the constraint below.
@@ -68,7 +82,7 @@ Order only once Phase 1 works. **The meter row is not settled** — see the cons
 | 330Ω resistor (RGB channels) | 3 | $0.15 | |
 | Passive buzzer module, 5V | 1 | $2.00 | event chime |
 | 3mm acrylic sheet for faceplate | 1 | $8.00 | cut at the UW Bothell makerspace |
-| M2.5 heat-set inserts | 4 | $0.50 | into the printed standoffs |
+| M2.5 × 6 self-tapping screws | 4 | $0.40 | straight into the printed standoffs — see below |
 | M3×10 pan-head screws | 4 | $0.40 | |
 
 Phase-2 prices are **estimates and not verified**; re-check at order time.
