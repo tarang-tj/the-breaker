@@ -1,45 +1,92 @@
 # Bill of materials
 
-Hand-audited and deduplicated. A hardware draft tool produced the first pass; its auto-repair loop duplicated parts and invented phantom modules, inflating the total to $152.70. This is the corrected list. Prices are estimates, re-verify at order time.
+Every price and stock status below was read off the live product page on **2026-08-08**. The
+previous revision of this file carried Blueprint AI's estimates; its auto-repair loop had
+duplicated parts and invented phantom modules, inflating the total to $152.70. That list was
+hand-audited down to $41.59 — and then the audit found the one line that mattered was wrong
+anyway. See "What changed" below.
 
-## Phase 1: bench demo (buy now)
+## Phase 1: bench demo
+
+| Part | Qty | Price | Source | Note |
+|---|---|---|---|---|
+| Raspberry Pi 5, 4GB | 1 | $110.00 | PiShop.us | in stock; see "Why a Pi 5" |
+| Raspberry Pi Active Cooler (SC1148) | 1 | $10.95 | PiShop.us | in stock |
+| Illuminated toggle switch with cover, red | 1 | $3.95 | Adafruit #3218 | 25 in stock; **LED lights at 3V** |
+| Half-size breadboard, 400 tie points | 1 | $4.95 | Adafruit #64 | |
+| Premium F/F jumpers, 40 × 3" | 1 | $3.95 | Adafruit #794 | |
+| Premium F/M jumpers, 20 × 6" | 1 | $1.95 | Adafruit #1954 | |
+| Diffused 5mm LED pack, 25 | 1 | $4.95 | Adafruit #4203 | |
+| 220Ω resistors, pack of 25 | 1 | $0.75 | Adafruit #2780 | |
+| Alligator-clip-to-male leads, 12 | 1 | $7.95 | Adafruit #3255 | see "No crimper" |
+| Samsung PRO Endurance 64GB microSDXC | 1 | ~$14.00 | Amazon MB-MJ64KA | **price not verified**; endurance card, see below |
+| **Total** | | **~$163.45** | | |
+
+Optional, skip if a suitable one is already on the desk:
+
+| Part | Qty | Price | Note |
+|---|---|---|---|
+| Official 27W USB-C PSU | 1 | $12.95 | Any 5V/3A USB-C PD charger works; USB ports cap at 600mA, irrelevant headless |
+
+## What changed, and why
+
+**Why a Pi 5 and not the Zero 2 W.** The original list specified a Pi Zero 2 W at $15. Two
+things killed it:
+
+1. **Supply.** On 2026-08-08 the Zero 2 W with headers was out of stock at Adafruit ($19.80) and
+   SparkFun ($20.70); PiShop listed $20.75 with no stock indicator, and third-party sellers were
+   asking $40–56 against a $15 MSRP. The cheap board is not reliably buyable.
+2. **The board has a second job.** This Pi is also the always-on host for the agent fleet itself —
+   the watchdog, act-listener and scheduled jobs currently die whenever the laptop sleeps, and a
+   monitor must not share the failure domain of what it monitors. 512MB does not carry that.
+
+**No crimper.** Adafruit #3218 uses 0.250" quick-connect tabs and does not ship with spade
+connectors. Rather than buy a crimping tool for a bench demo, the switch is clipped with
+alligator leads; proper spades get crimped later, for the Phase-2 panel.
+
+**220Ω, not 470Ω.** At 3.3V into a red LED (~2.0V forward drop) 220Ω passes ~6mA — well under the
+Pi's 16mA-per-pin limit, and brighter than 470Ω. Either works; 220Ω is what the verified pack
+contains.
+
+**An endurance microSD, not a generic one.** This box runs 24/7. The PRO Endurance line is built
+for continuous write (it is the surveillance-camera card). NVMe via the M.2 HAT+ (~$13 adapter +
+~$35 for 256GB) is the clean upgrade if the card ever becomes the problem — not a day-one need.
+
+**Nothing for a display.** No micro-HDMI cable, keyboard or monitor: flash with Raspberry Pi
+Imager, preset WiFi + SSH + hostname, and the board is headless from first boot.
+
+## Phase 2: cockpit expansion
+
+Order only once Phase 1 works. **The meter row is not settled** — see the constraint below.
 
 | Part | Qty | Est. | Note |
 |---|---|---|---|
-| Raspberry Pi Zero 2 W, pre-soldered headers | 1 | $15.00 | Adafruit #6008 class |
-| Guarded missile toggle switch, screw/spade terminals | 1 | $8.00 | verify terminals are NOT solder lugs |
-| SanDisk Ultra 32GB microSD | 1 | $7.99 | Pi cannot boot without it |
-| 5mm red LED | 1 | $0.50 | |
-| 470Ω resistor, 1/4W | 1 | $0.10 | LED series |
-| 400-point solderless breadboard | 1 | $3.00 | |
-| Female-female Dupont jumpers, 40-pack | 1 | $5.00 | one pack |
-| Pre-crimped female spade connectors | 4 | $2.00 | for switch lugs |
-| **Core subtotal** | | **$41.59** | |
-| 5V 2.5A micro-USB power supply | 1 | $8.00 | skip if a spare 5V micro-USB charger is on hand |
-| 5V relay module (optional, cosmetic click) | 1 | $3.00 | |
-| Wago 221-413 6-pack (optional tidy wiring) | 1 | $8.00 | |
-| **Max Phase 1** | | **$60.59** | |
-
-## Phase 2: cockpit expansion (order when Phase 1 works)
-
-| Part | Qty | Est. | Note |
-|---|---|---|---|
-| DROK 0-3V DC analog panel meter | 3 | $38.97 | 3V movement so 3.3V PWM sweeps full scale |
-| 1kΩ resistor (RC filter) | 3 | $0.15 | |
-| 100µF electrolytic capacitor (RC filter) | 3 | $0.45 | |
+| DROK 0-3V DC analog panel meter | 2–3 | $12.99 ea | 3V movement so 3.3V PWM sweeps full scale |
+| 1kΩ resistor (RC filter) | per meter | $0.05 | |
+| 100µF electrolytic capacitor (RC filter) | per meter | $0.15 | |
 | 5mm common-cathode RGB LED | 1 | $1.50 | |
 | 330Ω resistor (RGB channels) | 3 | $0.15 | |
 | Passive buzzer module, 5V | 1 | $2.00 | event chime |
-| ABS project box ~150x110x70mm | 1 | $12.00 | |
-| 3mm acrylic sheet for faceplate | 1 | $8.00 | cut at UW Bothell makerspace |
-| M2.5 brass standoffs | 4 | $1.00 | |
-| M3x10 pan-head screws | 4 | $0.40 | |
-| **Phase 2 subtotal** | | **$64.62** | |
+| 3mm acrylic sheet for faceplate | 1 | $8.00 | cut at the UW Bothell makerspace |
+| M2.5 heat-set inserts | 4 | $0.50 | into the printed standoffs |
+| M3×10 pan-head screws | 4 | $0.40 | |
 
-**Grand total both phases: ~$106-125**, under a $200 cap.
+Phase-2 prices are **estimates and not verified**; re-check at order time.
+
+### The Phase-2 constraint
+
+The 3D design (`hardware/parts/breaker_faceplate.py` in the career-radar repo) reserves the meter
+row as a keepout and measures it against the switch. The result: **only 75mm is free beside the
+guarded toggle on a 160mm plate.** DROK analog meters are ~45mm bezels, so **three do not fit.**
+
+Phase 2 must pick one: widen the plate to roughly 215mm, drop to two meters, or move the meters
+to a second face. The bezel dimension is itself unverified until real meters are in hand, so this
+is recorded rather than resolved.
 
 ## Open questions before ordering
 
-- Confirm the toggle switch has screw/spade terminals (many missile toggles are solder-lug).
-- Re-verify all prices at order time.
-- PSU need depends on whether a spare 5V micro-USB charger is available.
+- **The switch bore diameter is unknown.** Adafruit publishes a 66 × 50 × 20mm overall envelope
+  and no panel-bore figure, and guarded toggles ship with 6mm to 12mm bushings. The faceplate
+  design therefore exports with that one hole **uncut**, and its fabrication gate refuses while
+  the value is unknown. Measure the bushing when the switch arrives.
+- Re-verify the microSD price at checkout; it is the one line above that a live page did not confirm.

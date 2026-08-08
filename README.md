@@ -6,7 +6,7 @@ I run a small fleet of AI agents on my Mac that handle research, monitoring, and
 
 The agents are never *told* to stop. They quietly lose the ability to prove they are still allowed to run. **The default state is stop.**
 
-> **Status:** design of record complete and audited (Phase 1 BOM $41.59). Parts not yet ordered; the authority-token service and agent-side gate are the next build. This repo is the hardware design; the working build and demo video follow.
+> **Status:** design of record complete and audited. Enclosure and faceplate now exist as parametric CAD with measured geometry checks; Phase 1 BOM re-priced against live vendor pages on 2026-08-08 (~$163). **Parts not yet ordered.** The authority-token service and agent-side gate are the next build. This repo is the hardware design; the working build and demo video follow.
 
 🔗 [Follow the build on LinkedIn](https://www.linkedin.com/in/tarang-tj) · [More projects](https://github.com/tarang-tj) · [Live design page](https://tarang-tj.github.io/the-breaker/)
 
@@ -14,7 +14,9 @@ The agents are never *told* to stop. They quietly lose the ability to prove they
 
 ## How it works
 
-A guarded toggle on the desk feeds a Raspberry Pi Zero 2 W (a node on my private Tailscale network). The Pi serves a short-TTL "authority token" over HTTP on the tailnet. Every agent must fetch a fresh token before every action. Let the token lapse and the agent simply can't act.
+A guarded toggle on the desk feeds a Raspberry Pi 5 (a node on my private Tailscale network). The Pi serves a short-TTL "authority token" over HTTP on the tailnet. Every agent must fetch a fresh token before every action. Let the token lapse and the agent simply can't act.
+
+The board was a Pi Zero 2 W in the original design. It changed for two reasons: the Zero 2 W is not reliably buyable (out of stock at two major US suppliers, with third-party sellers asking 3x MSRP), and this Pi has a second job — it is also the always-on host for the agent fleet, whose watchdog currently dies with the laptop it monitors.
 
 ![System architecture](design/system-architecture.svg)
 
@@ -40,24 +42,32 @@ See [`hardware/gpio-map.md`](hardware/gpio-map.md) for the full pin map.
 
 ## Faceplate
 
-3mm laser-cut acrylic, 150x110mm, cut at the UW Bothell makerspace. Phase 2 adds three analog gauges reading live agent-activity metrics (tasks, reviews, halts), an RGB status LED, and an event chime.
+3mm laser-cut acrylic, **160x120mm**, cut at the UW Bothell makerspace, seating in a printed enclosure on a 3.65mm lip. Phase 2 adds analog gauges reading live agent-activity metrics, an RGB status LED, and an event chime.
+
+The plate grew from 150x110 because the parametric model measures rather than assumes: the guarded toggle's cover sweeps a 66x50mm envelope, and at 150x110 it left 5mm of acrylic to the edge against a 6mm minimum. **The switch sizes this panel — the Pi does not.**
+
+Two things the geometry checks refused, recorded rather than papered over:
+
+- **Three analog meters do not fit.** Only 75mm is free beside the guard; DROK bezels are ~45mm. Phase 2 must widen the plate to roughly 215mm, drop to two meters, or move them to a second face.
+- **The switch bore is not cut.** Adafruit publishes the cover envelope but no panel-bore diameter, and guarded toggles ship with 6–12mm bushings. The plate exports with that one hole absent and the fabrication gate refuses while the value is unknown. A laser cut is one-shot; a guessed hole is a wasted sheet.
 
 ![Faceplate layout](design/faceplate-layout.svg)
 
 ## Bill of materials
 
-Phase 1 gets a working bench demo for **$41.59**. Both phases land around **$106-125**, under a $200 cap. Full itemized list in [`hardware/bom.md`](hardware/bom.md).
+Phase 1 gets a working bench demo for **~$163**, every line but one read off a live vendor page on 2026-08-08. Full itemized list, with sources and the one unverified price, in [`hardware/bom.md`](hardware/bom.md).
 
-| Phase 1 core | Est. |
-|---|---|
-| Raspberry Pi Zero 2 W (pre-soldered headers) | $15.00 |
-| Guarded missile toggle switch | $8.00 |
-| SanDisk Ultra 32GB microSD | $7.99 |
-| 400-point solderless breadboard | $3.00 |
-| Female-female Dupont jumpers (40-pack) | $5.00 |
-| 5mm red LED + 470Ω resistor | $0.60 |
-| Pre-crimped female spade connectors (x4) | $2.00 |
-| **Core subtotal** | **$41.59** |
+| Phase 1 core | Price | Source |
+|---|---|---|
+| Raspberry Pi 5, 4GB | $110.00 | PiShop.us |
+| Raspberry Pi Active Cooler | $10.95 | PiShop.us |
+| Illuminated toggle switch with cover | $3.95 | Adafruit #3218 |
+| Half-size breadboard, 400 points | $4.95 | Adafruit #64 |
+| F/F + F/M jumper wires | $5.90 | Adafruit #794, #1954 |
+| 5mm LED pack + 220Ω resistors | $5.70 | Adafruit #4203, #2780 |
+| Alligator-clip-to-male leads | $7.95 | Adafruit #3255 |
+| Samsung PRO Endurance 64GB microSD | ~$14.00 | *price unverified* |
+| **Total** | **~$163.45** | |
 
 ## Design deck
 
