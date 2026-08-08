@@ -63,11 +63,16 @@ be flashed and the Pi never boots — a $7 part gating the entire build.
 That is wrong for this build specifically: the whole point of this Pi is that it keeps running
 when the laptop is closed and in a bag, so it cannot share the laptop's power supply.
 
-**No soldering iron.** The enclosure's standoffs take self-tapping M2.5 screws directly into
-printed PLA rather than heat-set inserts. Inserts thread better and survive far more
-reassemblies, but they need a soldering iron. Self-tapped PLA threads start to strip after
-roughly 5–10 reassemblies; the Pi is mounted once, so that ceiling is never approached. If this
-ever becomes a frequently-reworked assembly, switch back to inserts and buy the iron then.
+**Heat-set inserts, and a soldering iron to fit them.** The standoffs take M2.5 brass inserts
+melted into printed PLA — metal threads that survive reassembly, rather than self-tapped plastic
+that strips after 5–10 cycles. That needs a temperature-adjustable iron; a 60W pen-style unit that
+accepts Hakko T18 tips runs about $20, plus a heat-set tip kit.
+
+**The insert bore is 3.2mm, not 2.5.** An earlier revision of this BOM called 2.5mm "the heat-set
+insert pilot". 2.5 is the *screw's* thread diameter — an insert bore has to clear the insert's
+**body**, 3.5–4.0mm OD for M2.5. A 2.5mm hole takes no insert at all. Four bosses would have been
+printed useless. The design is now sized to a specific part (M2.5 × 4mm, 3.5mm OD); **if the
+inserts that arrive measure 4.0mm OD, the bore becomes 3.6mm.** Measure them before printing.
 
 ## Phase 2: cockpit expansion
 
@@ -82,7 +87,8 @@ Order only once Phase 1 works. **The meter row is not settled** — see the cons
 | 330Ω resistor (RGB channels) | 3 | $0.15 | |
 | Passive buzzer module, 5V | 1 | $2.00 | event chime |
 | 3mm acrylic sheet for faceplate | 1 | $8.00 | cut at the UW Bothell makerspace |
-| M2.5 × 6 self-tapping screws | 4 | $0.40 | straight into the printed standoffs — see below |
+| M2.5 × 4mm brass heat-set inserts, 3.5mm OD | 4 | $0.40 | melted into the printed standoffs |
+| M2.5 × 6 screws | 4 | $0.40 | Pi 5 into the inserts |
 | M3×10 pan-head screws | 4 | $0.40 | |
 
 Phase-2 prices are **estimates and not verified**; re-check at order time.
